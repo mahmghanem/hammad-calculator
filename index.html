@@ -203,13 +203,18 @@
 
     #print-page{
       display:block;
-      position:fixed; left:0; top:0;
+      position:absolute; left:0; top:0;
       width:210mm; height:297mm;
       background:#fff;
       -webkit-print-color-adjust:exact; print-color-adjust:exact;
+      overflow:visible;
     }
     #print-page img.print-header{ position:absolute; top:0; left:0; width:210mm; display:block; }
-    #print-page img.print-footer{ position:absolute; bottom:0; left:0; width:210mm; display:block; }
+    /* Chrome's print engine unreliably resolves bottom:0 inside position:fixed/absolute
+       containers (footer would vanish in Chrome print/PDF export while Firefox showed it).
+       Anchoring with an explicit top offset instead of bottom:0 fixes this consistently
+       across Chrome, Edge, and Firefox. */
+    #print-page img.print-footer{ position:absolute; top:244.4mm; left:0; width:210mm; display:block; }
 
     #print-table-area{
       position:absolute;
@@ -539,7 +544,21 @@ function calc(){
 }
 
 function printPdf(){
-  window.print();
+  var imgs = document.querySelectorAll('#print-page img');
+  var pending = [];
+  imgs.forEach(function(img){
+    if(!img.complete){
+      pending.push(new Promise(function(res){
+        img.addEventListener('load', res);
+        img.addEventListener('error', res);
+      }));
+    }
+  });
+  if(pending.length){
+    Promise.all(pending).then(function(){ window.print(); });
+  } else {
+    window.print();
+  }
 }
 
 function resetForm(){
