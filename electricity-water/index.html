@@ -197,13 +197,22 @@
     border:1.5px dashed var(--line); border-radius:14px; padding:16px 16px 8px; margin-bottom:14px;
     position:relative; background:var(--paper);
   }
-  .elec-block .elec-title{ font-size:13px; font-weight:800; color:var(--gold-1); margin-bottom:12px; display:flex; align-items:center; gap:6px; }
-  .elec-block .elec-title .n{ width:20px;height:20px;border-radius:50%; background:var(--gold-2); color:#fff; font-size:11px; display:flex; align-items:center; justify-content:center; }
+  .elec-block .elec-title{ font-size:13px; font-weight:800; color:var(--gold-1); margin-bottom:12px; display:flex; align-items:center; justify-content:space-between; gap:6px; }
+  .elec-block .elec-title .title-text{ display:flex; align-items:center; gap:6px; }
+  .elec-block .elec-title .n{ width:20px;height:20px;border-radius:50%; background:var(--gold-2); color:#fff; font-size:11px; display:flex; align-items:center; justify-content:center; flex:none; }
   .remove-elec{
-    position:absolute; top:12px; inset-inline-start:14px; background:none; border:none; color:var(--danger);
-    font-size:11.5px; font-weight:800; cursor:pointer; padding:2px 4px; display:none;
+    display:none; align-items:center; gap:6px;
+    background:#fdf1ee; border:1.5px solid rgba(192,57,43,.28); color:var(--danger);
+    font-size:12px; font-weight:800; line-height:1; cursor:pointer;
+    padding:7px 12px; border-radius:999px;
+    transition:background .15s, border-color .15s, transform .15s, box-shadow .15s;
   }
-  .elec-block.removable .remove-elec{ display:inline-block; }
+  .remove-elec svg{ width:14px; height:14px; flex:none; }
+  .remove-elec:hover{ background:var(--danger); border-color:var(--danger); color:#fff; transform:translateY(-1px); box-shadow:0 4px 10px rgba(192,57,43,.28); }
+  .remove-elec:active{ transform:translateY(0); box-shadow:none; }
+  .remove-elec:focus-visible{ outline:2px solid var(--danger); outline-offset:2px; }
+  /* delete button only ever shows on accounts other than the first/primary one */
+  .elec-block.removable .remove-elec{ display:inline-flex; }
 
   .apt-toggle{ display:flex; align-items:center; gap:8px; margin:10px 0 2px; font-size:13px; font-weight:700; color:var(--ink-2); cursor:pointer; user-select:none; }
   .apt-toggle input{ width:16px; height:16px; accent-color:var(--gold-2); cursor:pointer; }
@@ -727,8 +736,13 @@ function addElecBlock(){
   var n = elecCounter;
   var $block = $(
     '<div class="elec-block" data-n="'+n+'">' +
-      '<button type="button" class="remove-elec">✕ حذف</button>' +
-      '<div class="elec-title"><span class="n">'+n+'</span> حساب كهرباء</div>' +
+      '<div class="elec-title">' +
+        '<span class="title-text"><span class="n">'+n+'</span> حساب كهرباء</span>' +
+        '<button type="button" class="remove-elec" title="حذف هذا الحساب" aria-label="حذف هذا الحساب">' +
+          '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 6h18"/><path d="M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/><path d="M10 11v6"/><path d="M14 11v6"/></svg>' +
+          '<span>حذف الحساب</span>' +
+        '</button>' +
+      '</div>' +
       '<div class="field">' +
         '<label>رقم حساب شركة الكهرباء</label>' +
         '<div class="input-row"><input type="text" class="elec-acc" placeholder="مثال: 5501234567"></div>' +
@@ -754,7 +768,13 @@ function addElecBlock(){
 
 function refreshElecUI(){
   var $blocks = $elecContainer.find('.elec-block');
-  if($blocks.length > 1){ $blocks.addClass('removable'); } else { $blocks.removeClass('removable'); }
+  $blocks.each(function(i){
+    // القاعدة الصارمة: الحساب الأول (الأساسي) لا يحصل أبداً على زر حذف،
+    // بغض النظر عن عدد الحسابات المضافة. باقي الحسابات (index > 0) قابلة للحذف.
+    var isPrimary = (i === 0);
+    $(this).toggleClass('removable', !isPrimary);
+    $(this).find('.elec-title .n').first().text(i + 1);
+  });
   $('#elec-count-badge').text($blocks.length === 1 ? 'حساب واحد' : $blocks.length + ' حسابات');
 }
 
