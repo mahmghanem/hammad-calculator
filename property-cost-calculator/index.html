@@ -117,19 +117,15 @@
 
   .field{ margin-bottom:8px; }
   .field label{ display:block; font-size:14px; font-weight:700; color:var(--ink); margin-bottom:6px; }
-  .input-row{ position:relative; display:flex; align-items:center; border-radius:10px; }
+  .input-row{ position:relative; display:flex; align-items:center; }
   .input-row input{
     width:100%; font-family:inherit; font-size:17px; font-weight:700; color:var(--ink);
     background:var(--paper); border:1.5px solid var(--line); border-radius:10px; padding:12px 14px;
-    outline:none; transition:border-color .2s, background .2s, box-shadow .2s;
+    outline:none; transition:border-color .15s, background .15s, box-shadow .2s;
   }
   .input-row input::placeholder{ color:#b9b0a0; font-weight:400; }
-  .input-row input:focus{ border-color:var(--gold-2); background:#fff; animation:glowPulse 1.8s ease-in-out infinite; }
-  .input-row input.error{ border-color:var(--danger); background:#fdf1ee; box-shadow:0 0 0 4px rgba(192,57,43,.12); animation:none; }
-  @keyframes glowPulse{
-    0%,100%{ box-shadow:0 0 0 3px rgba(185,143,95,.14), 0 0 8px rgba(185,143,95,.2); }
-    50%{ box-shadow:0 0 0 5px rgba(185,143,95,.22), 0 0 16px rgba(185,143,95,.32); }
-  }
+  .input-row input:focus{ border-color:var(--gold-2); background:#fff; box-shadow:0 0 0 4px rgba(185,143,95,.14); }
+  .input-row input.error{ border-color:var(--danger); background:#fdf1ee; box-shadow:0 0 0 4px rgba(192,57,43,.12); }
 
   .error-msg{
     display:none;
@@ -277,25 +273,25 @@
       <div class="field reveal-item">
         <label for="x">قيمة العقار</label>
         <div class="input-row">
-          <input type="text" id="x" placeholder="0" inputmode="decimal" autocomplete="off">
+          <input type="number" id="x" placeholder="0" inputmode="decimal" min="0" step="any">
         </div>
         <div class="error-msg" id="err-x"><span class="dot">!</span> هذا الحقل مطلوب، يرجى إدخال القيمة</div>
       </div>
       <div class="field-spacer"></div>
 
       <div class="field reveal-item">
-        <label for="y">رسوم التسجيل العيني RER</label>
+        <label for="y">رسوم السجل العيني</label>
         <div class="input-row">
-          <input type="text" id="y" placeholder="0" inputmode="decimal" autocomplete="off">
+          <input type="number" id="y" placeholder="0" inputmode="decimal" min="0" step="any">
         </div>
         <div class="error-msg" id="err-y"><span class="dot">!</span> هذا الحقل مطلوب، يرجى إدخال القيمة</div>
       </div>
       <div class="field-spacer"></div>
 
       <div class="field reveal-item">
-        <label for="z">أتعاب المحامي أو الموثق</label>
+        <label for="z">أتعاب عامة</label>
         <div class="input-row">
-          <input type="text" id="z" placeholder="0" inputmode="decimal" autocomplete="off">
+          <input type="number" id="z" placeholder="0" inputmode="decimal" min="0" step="any">
         </div>
         <div class="error-msg" id="err-z"><span class="dot">!</span> هذا الحقل مطلوب، يرجى إدخال القيمة</div>
       </div>
@@ -320,8 +316,8 @@
               <tr class="r-row"><td class="label">قيمة العقار</td><td class="value"><div class="num" id="out-x">—</div><div class="words" id="out-x-w"></div></td></tr>
               <tr class="r-row"><td class="label">قيمة السعي <small>2.5% من قيمة العقار</small></td><td class="value"><div class="num" id="out-seai">—</div><div class="words" id="out-seai-w"></div></td></tr>
               <tr class="r-row"><td class="label">قيمة التصرفات العقارية <small>5% من قيمة العقار</small></td><td class="value"><div class="num" id="out-tasarrufat">—</div><div class="words" id="out-tasarrufat-w"></div></td></tr>
-              <tr class="r-row"><td class="label">رسوم التسجيل العيني RER</td><td class="value"><div class="num" id="out-y">—</div><div class="words" id="out-y-w"></div></td></tr>
-              <tr class="r-row"><td class="label">أتعاب المحامي أو الموثق</td><td class="value"><div class="num" id="out-z">—</div><div class="words" id="out-z-w"></div></td></tr>
+              <tr class="r-row"><td class="label">رسوم السجل العيني</td><td class="value"><div class="num" id="out-y">—</div><div class="words" id="out-y-w"></div></td></tr>
+              <tr class="r-row"><td class="label">أتعاب عامة</td><td class="value"><div class="num" id="out-z">—</div><div class="words" id="out-z-w"></div></td></tr>
               <tr class="r-row total-row"><td class="label">الإجمالي الكلي</td><td class="value"><div class="num" id="out-total">—</div><div class="words" id="out-total-w"></div></td></tr>
             </tbody>
           </table>
@@ -349,8 +345,8 @@
           <tr><td class="p-label">قيمة العقار</td><td class="p-value"><div class="p-num" id="p-out-x">—</div><div class="p-words" id="p-out-x-w"></div></td></tr>
           <tr><td class="p-label">قيمة السعي <small>2.5% من قيمة العقار</small></td><td class="p-value"><div class="p-num" id="p-out-seai">—</div><div class="p-words" id="p-out-seai-w"></div></td></tr>
           <tr><td class="p-label">قيمة التصرفات العقارية <small>5% من قيمة العقار</small></td><td class="p-value"><div class="p-num" id="p-out-tasarrufat">—</div><div class="p-words" id="p-out-tasarrufat-w"></div></td></tr>
-          <tr><td class="p-label">رسوم التسجيل العيني RER</td><td class="p-value"><div class="p-num" id="p-out-y">—</div><div class="p-words" id="p-out-y-w"></div></td></tr>
-          <tr><td class="p-label">أتعاب المحامي أو الموثق</td><td class="p-value"><div class="p-num" id="p-out-z">—</div><div class="p-words" id="p-out-z-w"></div></td></tr>
+          <tr><td class="p-label">رسوم السجل العيني</td><td class="p-value"><div class="p-num" id="p-out-y">—</div><div class="p-words" id="p-out-y-w"></div></td></tr>
+          <tr><td class="p-label">أتعاب عامة</td><td class="p-value"><div class="p-num" id="p-out-z">—</div><div class="p-words" id="p-out-z-w"></div></td></tr>
           <tr class="p-total"><td class="p-label">الإجمالي الكلي</td><td class="p-value"><div class="p-num" id="p-out-total">—</div><div class="p-words" id="p-out-total-w"></div></td></tr>
         </tbody>
       </table>
@@ -444,58 +440,9 @@ function revealFields(){
   });
 }
 
-/* ---------------- Live thousands separator while typing ---------------- */
-function rawNumber(id){
-  return $.trim($('#'+id).val()).replace(/,/g, '');
-}
-
-function formatNumberField(el){
-  var start = el.selectionStart;
-  var before = el.value;
-  var unitsBeforeCursor = before.substring(0, start).replace(/[^0-9.]/g, '').length;
-
-  var clean = before.replace(/[^0-9.]/g, '');
-  var dotIndex = clean.indexOf('.');
-  var intPart, decPart;
-  if(dotIndex === -1){
-    intPart = clean; decPart = null;
-  } else {
-    intPart = clean.substring(0, dotIndex);
-    decPart = clean.substring(dotIndex + 1).replace(/\./g, '').slice(0, 2);
-  }
-  intPart = intPart.replace(/^0+(?=\d)/, '');
-  var formattedInt = intPart.replace(/\B(?=(\d{3})+(?!\d))/g, ',');
-
-  var newValue = formattedInt;
-  if(decPart !== null){ newValue += '.' + decPart; }
-
-  el.value = newValue;
-
-  var pos = 0, unitCount = 0;
-  while(pos < newValue.length && unitCount < unitsBeforeCursor){
-    if(/[0-9.]/.test(newValue[pos])){ unitCount++; }
-    pos++;
-  }
-  el.setSelectionRange(pos, pos);
-}
-
-$('#x, #y, #z').on('input', function(){
-  formatNumberField(this);
-  var id = $(this).attr('id');
-  if(fieldIsValid(id)){ clearError(id); }
-});
-
-/* ---------------- Continuous focus glow ---------------- */
-$('#x, #y, #z').on('focus', function(){
-  $(this).closest('.input-row').addClass('focused');
-});
-$('#x, #y, #z').on('blur', function(){
-  $(this).closest('.input-row').removeClass('focused');
-});
-
 /* ---------------- Validation ---------------- */
 function fieldIsValid(id){
-  var val = rawNumber(id);
+  var val = $.trim($('#'+id).val());
   return val !== '' && !isNaN(val) && Number(val) >= 0;
 }
 
@@ -514,6 +461,11 @@ function clearError(id){
   $('#'+id).removeClass('error');
   $('#err-'+id).stop(true, true).slideUp(150);
 }
+
+$('#x, #y, #z').on('input', function(){
+  var id = $(this).attr('id');
+  if(fieldIsValid(id)){ clearError(id); }
+});
 
 function validateAndCalc(){
   var ids = ['x','y','z'];
@@ -537,9 +489,9 @@ function validateAndCalc(){
 
 /* ---------------- Calculation ---------------- */
 function calc(){
-  var x = parseFloat(rawNumber('x')) || 0;
-  var y = parseFloat(rawNumber('y')) || 0;
-  var z = parseFloat(rawNumber('z')) || 0;
+  var x = parseFloat($('#x').val()) || 0;
+  var y = parseFloat($('#y').val()) || 0;
+  var z = parseFloat($('#z').val()) || 0;
 
   var seai = x * 0.025;
   var tasarrufat = x * 0.05;
