@@ -102,8 +102,8 @@
     margin-top:26px;
     border-radius:22px;
     overflow:hidden;
-    background:linear-gradient(120deg, var(--deep) 0%, #2b3942 60%, var(--ink) 100%);
-    box-shadow:0 18px 40px -14px rgba(28,38,45,.45);
+    background:linear-gradient(125deg, #f2e0bd 0%, #dcb279 35%, #b98f5f 65%, #9c754a 100%);
+    box-shadow:0 18px 40px -14px rgba(156,117,74,.45);
     opacity:0; transform:translateY(-26px) scale(.97);
     transition:opacity .7s cubic-bezier(.2,.7,.2,1), transform .7s cubic-bezier(.2,.7,.2,1);
   }
@@ -111,12 +111,25 @@
   .hero::before{
     content:"";
     position:absolute; inset:0;
-    background-image:repeating-linear-gradient(115deg, rgba(217,187,140,.09) 0px, rgba(217,187,140,.09) 1px, transparent 1px, transparent 42px);
+    background-image:repeating-linear-gradient(115deg, rgba(51,65,76,.055) 0px, rgba(51,65,76,.055) 1px, transparent 1px, transparent 42px);
     pointer-events:none;
   }
+  .hero::after{
+    content:"";
+    position:absolute; inset:0;
+    background:radial-gradient(circle at 30% 15%, rgba(255,255,255,.65) 0%, rgba(255,255,255,0) 45%),
+               radial-gradient(circle at 85% 85%, rgba(255,255,255,.28) 0%, rgba(255,255,255,0) 40%);
+    pointer-events:none;
+    animation:heroGlow 6s ease-in-out infinite;
+  }
+  @keyframes heroGlow{
+    0%,100%{ opacity:.75; }
+    50%{ opacity:1; }
+  }
   .hero-banner-img{
-    width:100%; display:block; opacity:.16; filter:grayscale(15%);
+    width:100%; display:block; opacity:.10; filter:grayscale(25%);
     position:absolute; inset:0; height:100%; object-fit:cover;
+    mix-blend-mode:multiply;
   }
   .hero-inner{
     position:relative; z-index:2;
@@ -124,38 +137,43 @@
     text-align:center;
   }
   .hero-icon{
-    width:66px; height:66px; margin:0 auto 16px;
-    border-radius:18px;
-    background:linear-gradient(140deg, var(--gold-2), var(--gold-1));
+    width:88px; height:88px; margin:0 auto 18px;
+    border-radius:22px;
+    background:linear-gradient(140deg, #fdf6ea, #fff);
     display:flex; align-items:center; justify-content:center;
-    box-shadow:0 10px 26px -6px rgba(156,117,74,.55);
+    box-shadow:0 12px 30px -6px rgba(51,65,76,.35), inset 0 0 0 1.5px rgba(156,117,74,.35);
     animation:iconBreathe 3.2s ease-in-out infinite;
+    position:relative; z-index:2;
   }
   @keyframes iconBreathe{
     0%,100%{ transform:translateY(0) rotate(0deg); }
     50%{ transform:translateY(-5px) rotate(-3deg); }
   }
-  .hero-icon svg{ width:34px; height:34px; }
+  .hero-icon svg{ width:48px; height:48px; }
+  .hero-icon svg *{ stroke:var(--ink) !important; }
 
   h1.hero-title{
+    position:relative; z-index:2;
     font-family:'Tajawal',sans-serif;
-    font-size:clamp(26px,5vw,38px);
-    font-weight:900; color:#fff; margin:0 0 8px;
+    font-size:clamp(30px,6.5vw,46px);
+    font-weight:900; color:var(--ink); margin:0 0 8px;
     letter-spacing:.3px;
+    text-shadow:0 2px 10px rgba(255,255,255,.25);
   }
   h1.hero-title .accent{
-    background:linear-gradient(90deg, var(--gold-3), var(--gold-1));
-    -webkit-background-clip:text; background-clip:text; color:transparent;
+    color:#fff;
+    text-shadow:0 2px 14px rgba(51,65,76,.25);
   }
   .hero-sub{
-    font-size:14.5px; color:#c9d3d9; font-weight:600; letter-spacing:.4px; margin:0;
+    position:relative; z-index:2;
+    font-size:15px; color:var(--ink); font-weight:600; letter-spacing:.4px; margin:0; opacity:.85;
   }
-  .hero-sub b{ color:var(--gold-3); font-weight:800; }
+  .hero-sub b{ color:var(--deep); font-weight:800; }
   .hero-divider{
     width:70px; height:3px; margin:16px auto 0;
-    background:linear-gradient(90deg, var(--gold-1), var(--gold-3));
+    background:linear-gradient(90deg, rgba(51,65,76,.55), var(--deep));
     border-radius:3px;
-    position:relative; overflow:hidden;
+    position:relative; overflow:hidden; z-index:2;
   }
   .hero-divider::after{
     content:""; position:absolute; inset:0;
@@ -168,7 +186,8 @@
   }
 
   .hero-note{
-    margin-top:18px; font-size:12px; color:#9fb0b8; font-weight:600;
+    position:relative; z-index:2;
+    margin-top:18px; font-size:12.5px; color:var(--ink); font-weight:600; opacity:.75;
   }
 
   /* ===== Section label ===== */
@@ -196,7 +215,7 @@
     background:var(--card);
     border:1.5px solid var(--line);
     border-radius:20px;
-    padding:30px 24px 26px;
+    padding:36px 26px 32px;
     text-decoration:none;
     color:inherit;
     overflow:hidden;
@@ -237,29 +256,20 @@
   .tool-card:hover .card-corner-grid{ opacity:1; }
 
   .tool-icon{
-    width:58px; height:58px; border-radius:16px;
+    width:76px; height:76px; border-radius:20px;
     display:flex; align-items:center; justify-content:center;
-    margin-bottom:18px;
+    margin-bottom:20px;
     position:relative; z-index:2;
     transition:transform .4s cubic-bezier(.34,1.56,.64,1);
   }
   .tool-card:hover .tool-icon{ transform:scale(1.12) rotate(-6deg); }
-  .tool-icon svg{ width:30px; height:30px; }
+  .tool-icon svg{ width:38px; height:38px; }
   .icon-a{ background:linear-gradient(140deg, var(--gold-2), var(--gold-1)); box-shadow:0 8px 20px -6px rgba(156,117,74,.5); }
   .icon-b{ background:linear-gradient(140deg, #4a7f8f, #2d5866); box-shadow:0 8px 20px -6px rgba(45,88,102,.5); }
 
   .tool-card h3{
     position:relative; z-index:2;
-    font-size:18px; font-weight:800; color:var(--ink); margin:0 0 8px;
-  }
-  .tool-card p{
-    position:relative; z-index:2;
-    font-size:13px; color:var(--ink-2); line-height:1.9; margin:0 0 20px;
-  }
-  .tool-badges{ position:relative; z-index:2; display:flex; gap:6px; flex-wrap:wrap; margin-bottom:18px; }
-  .tool-badges span{
-    font-size:10.5px; font-weight:700; color:var(--gold-1);
-    background:var(--paper-2); border:1px solid var(--line); border-radius:20px; padding:3px 10px;
+    font-size:22px; font-weight:800; color:var(--ink); margin:0 0 22px; line-height:1.5;
   }
   .tool-cta{
     position:relative; z-index:2;
@@ -334,8 +344,6 @@
           </svg>
         </div>
         <h3>حاسبة تكاليف الصفقة العقارية</h3>
-        <p>احسب قيمة السعي والتصرفات العقارية ورسوم السجل العيني والأتعاب تلقائيًا، مع إصدار مستند نتائج جاهز للطباعة.</p>
-        <div class="tool-badges"><span>حساب فوري</span><span>طباعة PDF</span></div>
         <div class="tool-cta">
           <span>افتح الأداة</span>
           <span class="arrow"><svg viewBox="0 0 24 24" fill="none"><path d="M15 6l-6 6 6 6" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
@@ -350,8 +358,6 @@
           </svg>
         </div>
         <h3>إضافة حسابات الكهرباء والماء للعقار</h3>
-        <p>سجّل بيانات المشتري ورقم الصك وحسابات الكهرباء والماء وأصدر مستندًا رسميًا بالتاريخ الميلادي والهجري.</p>
-        <div class="tool-badges"><span>رقم صك 16 خانة</span><span>حسابات متعددة</span></div>
         <div class="tool-cta">
           <span>افتح الأداة</span>
           <span class="arrow"><svg viewBox="0 0 24 24" fill="none"><path d="M15 6l-6 6 6 6" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
