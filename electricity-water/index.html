@@ -260,23 +260,23 @@
   .results-head .rh-dates b{ color:#fff; }
 
   table.results-table{ width:100%; border-collapse:collapse; }
-  table.results-table td{ padding:13px 20px; font-size:14.5px; border-bottom:1px solid var(--paper-2); }
+  table.results-table td{ padding:15px 20px; font-size:17px; border-bottom:1px solid var(--paper-2); }
   table.results-table tr{ opacity:0; transform:translateX(12px); transition:opacity .4s ease, transform .4s ease; }
   table.results-table tr.row-in{ opacity:1; transform:translateX(0); }
   table.results-table tr:last-of-type td{ border-bottom:none; }
-  table.results-table td.label{ color:var(--ink-2); font-weight:600; }
-  table.results-table td.label small{ display:block; font-size:11px; color:var(--gold-1); font-weight:700; margin-top:2px; }
+  table.results-table td.label{ color:var(--ink-2); font-weight:700; }
+  table.results-table td.label small{ display:block; font-size:12px; color:var(--gold-1); font-weight:700; margin-top:2px; }
   table.results-table td.value{ text-align:left; font-weight:800; color:var(--ink); font-variant-numeric:tabular-nums; }
 
-  .sub-head{ padding:14px 20px 4px; font-size:13px; font-weight:800; color:var(--gold-1); background:var(--paper); }
+  .sub-head{ padding:14px 20px 4px; font-size:15px; font-weight:800; color:var(--gold-1); background:var(--paper); }
   table.mini-table{ width:100%; border-collapse:collapse; }
-  table.mini-table th, table.mini-table td{ padding:9px 10px; font-size:12.5px; text-align:center; border-bottom:1px solid var(--paper-2); }
+  table.mini-table th, table.mini-table td{ padding:11px 12px; font-size:15.5px; text-align:center; border-bottom:1px solid var(--paper-2); }
   table.mini-table th{ background:var(--paper); color:var(--ink-2); font-weight:800; }
-  table.mini-table td{ font-weight:700; color:var(--ink); }
+  table.mini-table td{ font-weight:800; color:var(--ink); font-variant-numeric:tabular-nums; }
 
-  tr.total-row td{ background:var(--paper-2); padding:17px 20px; font-size:16px; font-weight:900; }
+  tr.total-row td{ background:var(--paper-2); padding:19px 22px; font-size:18px; font-weight:900; }
   tr.total-row td.label{ color:var(--ink); }
-  tr.total-row td.value{ color:var(--gold-1); font-size:19px; }
+  tr.total-row td.value{ color:var(--gold-1); font-size:21px; }
 
   .print-btn-wrap{ padding:16px 20px 20px; background:var(--card); display:flex; gap:10px; }
   .btn-print{ flex:1; background:var(--ink); color:#fff; }
@@ -324,18 +324,19 @@
     }
     table.p-table{ width:100%; border-collapse:collapse; margin-bottom:4mm; }
     table.p-table td{
-      padding:4mm 3.5mm; font-size:10pt; border-bottom:0.4pt solid var(--line); color:var(--ink);
+      padding:4.5mm 3.5mm; font-size:13pt; border-bottom:0.4pt solid var(--line); color:var(--ink);
     }
     table.p-table td.p-label{ font-weight:700; color:var(--ink-2); }
     table.p-table td.p-value{ text-align:left; font-weight:800; font-variant-numeric:tabular-nums; }
     table.p-table tr:last-child td{ border-bottom:none; }
 
-    .p-sub-head{ font-size:10pt; font-weight:800; color:var(--gold-1); margin:3mm 0 1.5mm; }
+    .p-sub-head{ font-size:12.5pt; font-weight:800; color:var(--gold-1); margin:3mm 0 1.5mm; }
     table.p-mini{ width:100%; border-collapse:collapse; margin-bottom:3mm; }
-    table.p-mini th, table.p-mini td{ padding:2.6mm 2mm; font-size:8.5pt; text-align:center; border:0.3pt solid var(--line); }
+    table.p-mini th, table.p-mini td{ padding:3.2mm 2mm; font-size:11.5pt; text-align:center; border:0.3pt solid var(--line); }
     table.p-mini th{ background:var(--paper-2); font-weight:800; color:var(--ink-2); }
+    table.p-mini td{ font-weight:700; font-variant-numeric:tabular-nums; }
 
-    table.p-table tr.p-total td{ background:var(--paper-2); font-size:12pt; font-weight:900; padding:5mm 3.5mm; }
+    table.p-table tr.p-total td{ background:var(--paper-2); font-size:15pt; font-weight:900; padding:5.5mm 3.5mm; }
     table.p-table tr.p-total td.p-value{ color:var(--gold-1); }
   }
 </style>
@@ -473,7 +474,7 @@
 
           <div class="sub-head">⚡ حسابات الكهرباء</div>
           <table class="mini-table">
-            <thead><tr><th>#</th><th>رقم الحساب</th><th>رقم الشقة</th><th>المبلغ</th></tr></thead>
+            <thead><tr><th>#</th><th>رقم الحساب</th><th class="apt-col">رقم الشقة</th><th>المبلغ</th></tr></thead>
             <tbody id="elec-results-body"></tbody>
           </table>
 
@@ -521,7 +522,7 @@
 
       <div class="p-sub-head">⚡ حسابات الكهرباء</div>
       <table class="p-mini">
-        <thead><tr><th>#</th><th>رقم الحساب</th><th>رقم الشقة</th><th>المبلغ</th></tr></thead>
+        <thead><tr><th>#</th><th>رقم الحساب</th><th class="apt-col">رقم الشقة</th><th>المبلغ</th></tr></thead>
         <tbody id="p-elec-body"></tbody>
       </table>
 
@@ -892,11 +893,13 @@ function calc(elecData){
 
   var $body = $('#elec-results-body').empty();
   var $pbody = $('#p-elec-body').empty();
+  var hasApt = elecData.some(function(row){ return !!row.apt; });
   elecData.forEach(function(row, i){
-    var aptTxt = row.apt ? row.apt : 'غير محدد';
-    $body.append('<tr><td>'+(i+1)+'</td><td style="direction:ltr;">'+row.account+'</td><td>'+aptTxt+'</td><td>'+fmt(row.amount)+'</td></tr>');
-    $pbody.append('<tr><td>'+(i+1)+'</td><td style="direction:ltr;">'+row.account+'</td><td>'+aptTxt+'</td><td>'+fmt(row.amount)+'</td></tr>');
+    var aptTxt = row.apt ? row.apt : '';
+    $body.append('<tr><td>'+(i+1)+'</td><td style="direction:ltr;">'+row.account+'</td><td class="apt-col">'+aptTxt+'</td><td>'+fmt(row.amount)+'</td></tr>');
+    $pbody.append('<tr><td>'+(i+1)+'</td><td style="direction:ltr;">'+row.account+'</td><td class="apt-col">'+aptTxt+'</td><td>'+fmt(row.amount)+'</td></tr>');
   });
+  $('.apt-col').toggle(hasApt);
 
   buildDates();
 
