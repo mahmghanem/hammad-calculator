@@ -192,6 +192,35 @@
   .deed-meta #deed-count.ok{ color:var(--success); }
   .deed-meta #deed-count.bad{ color:var(--danger); }
 
+  /* ===== Buyers (dynamic add/remove) ===== */
+  .buyer-section{ margin-bottom:10px; }
+  .buyer-block{
+    border:1.5px dashed var(--line); border-radius:14px; padding:16px 16px 10px; margin-bottom:14px;
+    position:relative; background:var(--paper);
+  }
+  .buyer-block .buyer-title{
+    font-size:13px; font-weight:800; color:var(--gold-1); margin-bottom:10px;
+    display:flex; align-items:center; justify-content:space-between; gap:8px;
+  }
+  .buyer-block .buyer-title .title-text{ display:flex; align-items:center; gap:7px; }
+  .buyer-block .buyer-title .n{
+    width:20px; height:20px; border-radius:50%; background:var(--gold-2); color:#fff;
+    font-size:11px; display:flex; align-items:center; justify-content:center; flex:none;
+  }
+  .remove-buyer{
+    display:none; align-items:center; gap:6px;
+    background:#fdf1ee; border:1.5px solid rgba(192,57,43,.28); color:var(--danger);
+    font-size:12px; font-weight:800; line-height:1; cursor:pointer;
+    padding:7px 12px; border-radius:999px;
+    transition:background .15s, border-color .15s, transform .15s, box-shadow .15s;
+  }
+  .remove-buyer svg{ width:14px; height:14px; flex:none; }
+  .remove-buyer:hover{ background:var(--danger); border-color:var(--danger); color:#fff; transform:translateY(-1px); box-shadow:0 4px 10px rgba(192,57,43,.28); }
+  .remove-buyer:active{ transform:translateY(0); box-shadow:none; }
+  .remove-buyer:focus-visible{ outline:2px solid var(--danger); outline-offset:2px; }
+  .buyer-block.removable .remove-buyer{ display:inline-flex; }
+  .add-buyer-btn{ margin-top:0; }
+
   /* ===== Electricity account block ===== */
   .elec-block{
     border:1.5px dashed var(--line); border-radius:14px; padding:16px 16px 8px; margin-bottom:14px;
@@ -322,6 +351,13 @@
     #print-table-area .p-dates{
       text-align:center; font-size:9pt; color:var(--gold-1); font-weight:700; margin:0 0 5mm;
     }
+    table.p-buyer-table{ width:100%; border-collapse:collapse; margin-bottom:4mm; }
+    table.p-buyer-table th, table.p-buyer-table td{
+      padding:3.2mm 2mm; font-size:11.5pt; text-align:center; border:0.3pt solid var(--line); color:var(--ink);
+    }
+    table.p-buyer-table th{ background:var(--paper-2); font-weight:800; color:var(--ink-2); }
+    table.p-buyer-table td{ font-weight:700; }
+
     table.p-table{ width:100%; border-collapse:collapse; margin-bottom:4mm; }
     table.p-table td{
       padding:4.5mm 3.5mm; font-size:13pt; border-bottom:0.4pt solid var(--line); color:var(--ink);
@@ -376,29 +412,10 @@
     <div class="card reveal-item">
       <h2>بيانات المشتري والعقار</h2>
 
-      <div class="grid2">
-        <div class="field">
-          <label for="fn1">الاسم الأول</label>
-          <div class="input-row"><input type="text" id="fn1" placeholder="الاسم الأول"></div>
-          <div class="error-msg" id="err-fn1"><span class="dot">!</span> هذا الحقل مطلوب</div>
-        </div>
-        <div class="field">
-          <label for="fn2">الاسم الثاني</label>
-          <div class="input-row"><input type="text" id="fn2" placeholder="الاسم الثاني"></div>
-          <div class="error-msg" id="err-fn2"><span class="dot">!</span> هذا الحقل مطلوب</div>
-        </div>
-        <div class="field">
-          <label for="fn3">الاسم الثالث</label>
-          <div class="input-row"><input type="text" id="fn3" placeholder="الاسم الثالث"></div>
-          <div class="error-msg" id="err-fn3"><span class="dot">!</span> هذا الحقل مطلوب</div>
-        </div>
-        <div class="field">
-          <label for="fn4">اسم العائلة</label>
-          <div class="input-row"><input type="text" id="fn4" placeholder="اسم العائلة"></div>
-          <div class="error-msg" id="err-fn4"><span class="dot">!</span> هذا الحقل مطلوب</div>
-        </div>
-      </div>
-      <div class="field-spacer"></div>
+      <div class="buyer-section">
+        <div class="buyer-container" id="buyer-container"></div>
+        <button type="button" class="add-elec-btn add-buyer-btn" id="add-buyer-btn">＋ إضافة مشتري آخر</button>
+      </div><div class="field-spacer"></div>
 
       <div class="field">
         <label for="pname">اسم العقار</label>
@@ -463,9 +480,14 @@
               <span>هجري: <b id="res-hijri">—</b></span>
             </div>
           </div>
+          <div class="sub-head buyer-results-head">👤 المشترون</div>
+          <table class="mini-table buyer-results-table">
+            <thead><tr><th>#</th><th>اسم المشتري</th></tr></thead>
+            <tbody id="buyer-results-body"></tbody>
+          </table>
+
           <table class="results-table">
             <tbody>
-              <tr class="r-row"><td class="label">اسم المشتري</td><td class="value" id="out-name">—</td></tr>
               <tr class="r-row"><td class="label">اسم العقار</td><td class="value" id="out-pname">—</td></tr>
               <tr class="r-row"><td class="label">المساحة</td><td class="value" id="out-area">—</td></tr>
               <tr class="r-row"><td class="label">رقم الصك</td><td class="value" id="out-deed" style="direction:ltr;">—</td></tr>
@@ -511,9 +533,14 @@
       <div class="p-title">مستند تسجيل حسابات الكهرباء والماء للعقار</div>
       <div class="p-sub">يرجى الاحتفاظ بهذا المستند لأغراض المتابعة والمراجعة</div>
       <div class="p-dates" id="p-dates">—</div>
+      <div class="p-sub-head">👤 المشترون</div>
+      <table class="p-mini p-buyer-table">
+        <thead><tr><th>#</th><th>اسم المشتري</th></tr></thead>
+        <tbody id="p-buyer-body"></tbody>
+      </table>
+
       <table class="p-table">
         <tbody>
-          <tr><td class="p-label">اسم المشتري</td><td class="p-value" id="p-out-name">—</td></tr>
           <tr><td class="p-label">اسم العقار</td><td class="p-value" id="p-out-pname">—</td></tr>
           <tr><td class="p-label">المساحة</td><td class="p-value" id="p-out-area">—</td></tr>
           <tr><td class="p-label">رقم الصك</td><td class="p-value" id="p-out-deed" style="direction:ltr;">—</td></tr>
@@ -666,11 +693,76 @@ function clearError(id){
   $('#'+id).removeClass('error');
   $('#err-'+id).stop(true, true).slideUp(150);
 }
-$(document).on('input', '#fn1,#fn2,#fn3,#fn4,#pname,#area,#water-acc,#water-amt', function(){
+$(document).on('input', '.buyer-name', function(){
+  var $input = $(this);
+  if($.trim($input.val()) !== '') {
+    $input.removeClass('error');
+    $input.closest('.field').find('.buyer-err').stop(true,true).slideUp(150);
+  }
+});
+$(document).on('input', '#pname,#area,#water-acc,#water-amt', function(){
   var id = $(this).attr('id');
   if($(this).attr('type') === 'number'){ if(numFieldIsValid(id)) clearError(id); }
   else { if(fieldIsValid(id)) clearError(id); }
 });
+
+/* ---------------- Buyers (dynamic add/remove) ---------------- */
+var buyerCounter = 0;
+var $buyerContainer = $('#buyer-container');
+
+function addBuyerBlock(){
+  buyerCounter++;
+  var n = buyerCounter;
+  var $block = $(
+    '<div class="buyer-block" data-n="'+n+'">' +
+      '<div class="buyer-title">' +
+        '<span class="title-text"><span class="n">'+n+'</span><span class="buyer-label">مشتري '+n+'</span></span>' +
+        '<button type="button" class="remove-buyer" title="حذف هذا المشتري" aria-label="حذف هذا المشتري">' +
+          '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">' +
+            '<path d="M3 6h18"/><path d="M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/>' +
+            '<path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/>' +
+            '<path d="M10 11v6"/><path d="M14 11v6"/>' +
+          '</svg>' +
+          '<span>حذف المشتري</span>' +
+        '</button>' +
+      '</div>' +
+      '<div class="field">' +
+        '<label>اسم المشتري</label>' +
+        '<div class="input-row"><input type="text" class="buyer-name" placeholder="أدخل اسم المشتري" autocomplete="name"></div>' +
+        '<div class="error-msg buyer-err"><span class="dot">!</span> يرجى إدخال اسم المشتري</div>' +
+      '</div>' +
+    '</div>'
+  );
+  $buyerContainer.append($block);
+  $block.hide().slideDown(260);
+  refreshBuyerUI();
+}
+
+function refreshBuyerUI(){
+  var $blocks = $buyerContainer.find('.buyer-block');
+  $blocks.each(function(i){
+    var $block = $(this);
+    var isPrimary = (i === 0);
+    $block.toggleClass('removable', !isPrimary);
+    $block.find('.buyer-title .n').first().text(i + 1);
+    $block.find('.buyer-label').text('مشتري ' + (i + 1));
+  });
+}
+
+$buyerContainer.on('click', '.remove-buyer', function(){
+  var $block = $(this).closest('.buyer-block');
+  if($buyerContainer.find('.buyer-block').length <= 1){
+    toast('لا يمكن حذف المشتري الأساسي. يجب أن يبقى مشتري واحد على الأقل.', 'danger');
+    return;
+  }
+  $block.slideUp(220, function(){
+    $(this).remove();
+    refreshBuyerUI();
+  });
+});
+
+$('#add-buyer-btn').on('click', addBuyerBlock);
+addBuyerBlock();
 
 /* ---------------- Deed number: 16 separate boxes ---------------- */
 var DEED_LEN = 16;
@@ -800,10 +892,22 @@ function validateAndCalc(){
   var valid = true;
   var $first = null;
 
-  ['fn1','fn2','fn3','fn4','pname'].forEach(function(id){
-    if(!fieldIsValid(id)){ showError(id); valid = false; if(!$first) $first = $('#'+id); }
-    else { clearError(id); }
+  $buyerContainer.find('.buyer-block').each(function(){
+    var $b = $(this);
+    var $name = $b.find('.buyer-name');
+    if($.trim($name.val()) === ''){
+      $name.addClass('error');
+      $b.find('.buyer-err').stop(true,true).slideDown(150);
+      valid = false;
+      if(!$first) $first = $name;
+    } else {
+      $name.removeClass('error');
+      $b.find('.buyer-err').stop(true,true).slideUp(120);
+    }
   });
+
+  if(!fieldIsValid('pname')){ showError('pname'); valid = false; if(!$first) $first = $('#pname'); }
+  else { clearError('pname'); }
 
   if(!numFieldIsValid('area')){ showError('area'); valid = false; if(!$first) $first = $('#area'); }
   else { clearError('area'); }
@@ -863,8 +967,16 @@ function validateAndCalc(){
 }
 
 /* ---------------- Calculation & render ---------------- */
+function escapeHtml(value){
+  return $('<div>').text(value == null ? '' : String(value)).html();
+}
+
 function calc(elecData){
-  var fullName = [$('#fn1').val(), $('#fn2').val(), $('#fn3').val(), $('#fn4').val()].join(' ').trim();
+  var buyerNames = [];
+  $buyerContainer.find('.buyer-block').each(function(){
+    var name = $.trim($(this).find('.buyer-name').val());
+    if(name !== '') buyerNames.push(name);
+  });
   var pname = $('#pname').val();
   var area = parseFloat($('#area').val()) || 0;
   var deed = getDeedValue();
@@ -875,7 +987,13 @@ function calc(elecData){
   elecData.forEach(function(row){ elecTotal += row.amount; });
   var grandTotal = elecTotal + waterAmt;
 
-  $('#out-name').text(fullName);
+  var $buyerResults = $('#buyer-results-body').empty();
+  var $pBuyerResults = $('#p-buyer-body').empty();
+  buyerNames.forEach(function(name, i){
+    $buyerResults.append('<tr><td>'+(i+1)+'</td><td>'+escapeHtml(name)+'</td></tr>');
+    $pBuyerResults.append('<tr><td>'+(i+1)+'</td><td>'+escapeHtml(name)+'</td></tr>');
+  });
+
   $('#out-pname').text(pname);
   $('#out-area').text(area.toLocaleString('en-US') + ' م²');
   $('#out-deed').text(deed);
@@ -883,7 +1001,6 @@ function calc(elecData){
   $('#out-water-amt').text(fmt(waterAmt));
   $('#out-total').text(fmt(grandTotal));
 
-  $('#p-out-name').text(fullName);
   $('#p-out-pname').text(pname);
   $('#p-out-area').text(area.toLocaleString('en-US') + ' م²');
   $('#p-out-deed').text(deed);
@@ -942,8 +1059,11 @@ function editForm(){
 }
 
 function resetForm(){
-  $('#fn1,#fn2,#fn3,#fn4,#pname,#area,#water-acc,#water-amt').val('');
-  ['fn1','fn2','fn3','fn4','pname','area','water-acc','water-amt'].forEach(clearError);
+  $buyerContainer.empty();
+  buyerCounter = 0;
+  addBuyerBlock();
+  $('#pname,#area,#water-acc,#water-amt').val('');
+  ['pname','area','water-acc','water-amt'].forEach(clearError);
   $deedInputs.val('').removeClass('error');
   updateDeedCount();
   $('#err-deed').stop(true,true).slideUp(150);
