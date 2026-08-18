@@ -217,6 +217,7 @@
       position:absolute; left:0; top:0;
       width:210mm; height:297mm;
       background:#fff;
+      font-family:'Bahij TheSansArabic','Bahij TheSansArabic Bold','Tajawal',sans-serif;
       -webkit-print-color-adjust:exact; print-color-adjust:exact;
       overflow:visible;
     }
@@ -229,35 +230,52 @@
 
     #print-table-area{
       position:absolute;
-      top:38mm; left:0; width:210mm;
-      padding:0 22mm;
+      top:37mm; left:0; width:210mm;
+      padding:0 20mm;
     }
     #print-table-area .p-title{
-      text-align:center; font-size:15pt; font-weight:800; color:var(--ink);
-      margin:0 0 2.5mm;
+      text-align:center; font-size:17pt; font-weight:900; color:var(--ink);
+      margin:0 0 3mm; font-family:inherit;
     }
     #print-table-area .p-sub{
-      text-align:center; font-size:9pt; color:var(--ink-2); margin:0 0 5.5mm;
+      text-align:center; font-size:10.5pt; font-weight:700; color:var(--ink-2); margin:0 0 6mm;
+      font-family:inherit;
     }
-    table.p-table{ width:100%; border-collapse:collapse; }
+    table.p-table{ width:100%; border-collapse:collapse; font-family:inherit; }
     table.p-table td{
-      padding:4.4mm 4mm; font-size:12pt; border-bottom:0.4pt solid var(--line); color:var(--ink);
+      padding:9mm 5mm; font-size:14pt; font-weight:700; border-bottom:0.5pt solid var(--line);
+      color:var(--ink); vertical-align:middle; font-family:inherit;
     }
-    table.p-table td.p-label{ font-weight:700; color:var(--ink-2); }
-    table.p-table td.p-label small{ display:block; font-size:8.5pt; color:var(--gold-1); font-weight:700; margin-top:1mm; }
-    table.p-table td.p-value{ text-align:left; font-weight:800; font-variant-numeric:tabular-nums; }
-    table.p-table td.p-value .p-num{ white-space:nowrap; font-size:16pt; font-weight:900; color:#000; }
+    table.p-table td.p-label{ font-weight:800; color:var(--ink); }
+    table.p-table td.p-label small{ display:block; font-size:9.5pt; font-weight:700; color:var(--gold-1); margin-top:1.5mm; }
+    table.p-table td.p-value{ text-align:left; font-weight:900; font-variant-numeric:tabular-nums; }
+    table.p-table td.p-value .p-num{ white-space:nowrap; font-size:18pt; font-weight:900; color:#000; }
     table.p-table td.p-value .p-words{
-      text-align:left; white-space:normal; font-weight:600; font-size:8.5pt;
-      color:var(--gold-1); margin-top:1mm; line-height:1.4;
+      text-align:left; white-space:normal; font-weight:700; font-size:9.5pt;
+      color:var(--gold-1); margin-top:1.5mm; line-height:1.4;
     }
-    table.p-table tr.p-total td.p-value .p-words{ font-size:9.5pt; font-weight:700; }
-    table.p-table tr.p-total td{ background:var(--paper-2); font-size:14pt; font-weight:900; padding:5.4mm 4mm; }
+    table.p-table tr.p-total td{ background:var(--paper-2); padding:10mm 5mm; }
+    table.p-table tr.p-total td.p-label{ font-size:15pt; font-weight:900; color:var(--ink); }
     table.p-table tr.p-total td.p-value{ color:#000; }
-    table.p-table tr.p-total td.p-value .p-num{ font-size:19pt; font-weight:900; color:#000; }
+    table.p-table tr.p-total td.p-value .p-num{ font-size:22pt; font-weight:900; color:#000; }
+    table.p-table tr.p-total td.p-value .p-words{ font-size:10.5pt; font-weight:800; }
     table.p-table tr:last-child td{ border-bottom:none; }
   }
 </style>
+
+<!--
+  NOTE on "Bahij TheSansArabic": this is a commercial font sold by 29Letters /
+  Bahij Badreddine and is NOT available on Google Fonts or any public CDN, so it
+  cannot be embedded here automatically. The rule above requests it by name for
+  print, and the browser will use it automatically if it is already installed on
+  the printing computer (common in Saudi design/marketing offices). If it is not
+  installed, print falls back to 'Tajawal' at heavy weight, which is the closest
+  free match in shape and boldness. To guarantee Bahij renders even on machines
+  that don't have it installed, host the licensed .woff2 files yourself and add:
+  @font-face{ font-family:'Bahij TheSansArabic'; src:url('/fonts/BahijTheSansArabic-Bold.woff2') format('woff2'); font-weight:700 900; }
+  before the closing </style> tag above, pointing to your own hosted font files.
+-->
+
 </head>
 <body>
 
