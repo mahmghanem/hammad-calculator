@@ -661,6 +661,26 @@ function printPdf(){
       }));
     }
   });
+
+  // 'Bahij TheSansArabic' is only ever used inside #print-page, which stays
+  // display:none until @media print applies. Because the font is never
+  // rendered on screen first, Chrome's print pipeline can start rendering
+  // the print layout before it has actually decoded/loaded that @font-face
+  // (it doesn't block printing on unused, not-yet-loaded fonts), so it
+  // silently falls back to the next font in the stack (Tajawal) — Firefox
+  // happens to wait for it, which is why the print output only looked
+  // correct there. Explicitly requesting the font via the Font Loading API
+  // and waiting for it to finish before calling window.print() forces
+  // Chrome to have it ready in time as well.
+  if(document.fonts && document.fonts.load){
+    ['400','700','900'].forEach(function(weight){
+      pending.push(
+        document.fonts.load(weight + ' 16px "Bahij TheSansArabic"').catch(function(){})
+      );
+    });
+    pending.push(document.fonts.ready.catch(function(){}));
+  }
+
   if(pending.length){
     Promise.all(pending).then(function(){ window.print(); });
   } else {
