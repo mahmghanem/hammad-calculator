@@ -177,22 +177,23 @@
   .results-head h3{ margin:2px 0 0; font-size:17px; font-weight:800; }
 
   table.results-table{ width:100%; border-collapse:collapse; }
-  table.results-table td{ padding:13px 20px; font-size:14.5px; border-bottom:1px solid var(--paper-2); }
+  table.results-table td{ padding:15px 20px; font-size:15px; border-bottom:1px solid var(--paper-2); }
   table.results-table tr{ opacity:0; transform:translateX(12px); transition:opacity .4s ease, transform .4s ease; }
   table.results-table tr.row-in{ opacity:1; transform:translateX(0); }
   table.results-table tr:last-of-type td{ border-bottom:none; }
   table.results-table td.label{ color:var(--ink-2); font-weight:600; }
-  table.results-table td.label small{ display:block; font-size:11px; color:var(--gold-1); font-weight:700; margin-top:2px; }
-  table.results-table td.value{ text-align:left; font-weight:800; color:var(--ink); font-variant-numeric:tabular-nums; }
-  table.results-table td.value .num{ white-space:nowrap; }
+  table.results-table td.label small{ display:block; font-size:11.5px; color:var(--gold-1); font-weight:700; margin-top:2px; }
+  table.results-table td.value{ text-align:left; font-weight:800; color:#000; font-variant-numeric:tabular-nums; }
+  table.results-table td.value .num{ white-space:nowrap; font-size:22px; font-weight:900; color:#000; }
   table.results-table td.value .words{
-    text-align:left; white-space:normal; font-weight:600; font-size:11px;
-    color:var(--gold-1); margin-top:3px; line-height:1.5; opacity:.9;
+    text-align:left; white-space:normal; font-weight:600; font-size:12px;
+    color:var(--gold-1); margin-top:4px; line-height:1.5; opacity:.9;
   }
-  tr.total-row td.value .words{ color:var(--gold-1); font-size:11.5px; font-weight:700; }
-  tr.total-row td{ background:var(--paper-2); padding:17px 20px; font-size:16px; font-weight:900; }
+  tr.total-row td.value .words{ color:var(--gold-1); font-size:13px; font-weight:700; }
+  tr.total-row td{ background:var(--paper-2); padding:19px 20px; font-size:17px; font-weight:900; }
   tr.total-row td.label{ color:var(--ink); }
-  tr.total-row td.value{ color:var(--gold-1); font-size:19px; }
+  tr.total-row td.value{ color:#000; }
+  tr.total-row td.value .num{ font-size:27px; font-weight:900; color:#000; }
 
   .print-btn-wrap{ padding:16px 20px 20px; background:var(--card); }
   .btn-print{ width:100%; background:var(--ink); color:#fff; }
@@ -228,31 +229,32 @@
 
     #print-table-area{
       position:absolute;
-      top:40mm; left:0; width:210mm;
+      top:38mm; left:0; width:210mm;
       padding:0 22mm;
     }
     #print-table-area .p-title{
       text-align:center; font-size:15pt; font-weight:800; color:var(--ink);
-      margin:0 0 3mm;
+      margin:0 0 2.5mm;
     }
     #print-table-area .p-sub{
-      text-align:center; font-size:9pt; color:var(--ink-2); margin:0 0 7mm;
+      text-align:center; font-size:9pt; color:var(--ink-2); margin:0 0 5.5mm;
     }
     table.p-table{ width:100%; border-collapse:collapse; }
     table.p-table td{
-      padding:5.2mm 4mm; font-size:11pt; border-bottom:0.4pt solid var(--line); color:var(--ink);
+      padding:4.4mm 4mm; font-size:12pt; border-bottom:0.4pt solid var(--line); color:var(--ink);
     }
     table.p-table td.p-label{ font-weight:700; color:var(--ink-2); }
-    table.p-table td.p-label small{ display:block; font-size:8pt; color:var(--gold-1); font-weight:700; margin-top:1mm; }
+    table.p-table td.p-label small{ display:block; font-size:8.5pt; color:var(--gold-1); font-weight:700; margin-top:1mm; }
     table.p-table td.p-value{ text-align:left; font-weight:800; font-variant-numeric:tabular-nums; }
-    table.p-table td.p-value .p-num{ white-space:nowrap; }
+    table.p-table td.p-value .p-num{ white-space:nowrap; font-size:16pt; font-weight:900; color:#000; }
     table.p-table td.p-value .p-words{
-      text-align:left; white-space:normal; font-weight:600; font-size:8pt;
-      color:var(--gold-1); margin-top:1.2mm; line-height:1.5;
+      text-align:left; white-space:normal; font-weight:600; font-size:8.5pt;
+      color:var(--gold-1); margin-top:1mm; line-height:1.4;
     }
-    table.p-table tr.p-total td.p-value .p-words{ font-size:9pt; font-weight:700; }
-    table.p-table tr.p-total td{ background:var(--paper-2); font-size:13pt; font-weight:900; padding:6mm 4mm; }
-    table.p-table tr.p-total td.p-value{ color:var(--gold-1); }
+    table.p-table tr.p-total td.p-value .p-words{ font-size:9.5pt; font-weight:700; }
+    table.p-table tr.p-total td{ background:var(--paper-2); font-size:14pt; font-weight:900; padding:5.4mm 4mm; }
+    table.p-table tr.p-total td.p-value{ color:#000; }
+    table.p-table tr.p-total td.p-value .p-num{ font-size:19pt; font-weight:900; color:#000; }
     table.p-table tr:last-child td{ border-bottom:none; }
   }
 </style>
@@ -329,7 +331,7 @@
             <tbody>
               <tr class="r-row"><td class="label">قيمة العقار</td><td class="value"><div class="num" id="out-x">—</div><div class="words" id="out-x-w"></div></td></tr>
               <tr class="r-row"><td class="label">قيمة السعي <small>2.5% من قيمة العقار</small></td><td class="value"><div class="num" id="out-seai">—</div><div class="words" id="out-seai-w"></div></td></tr>
-              <tr class="r-row"><td class="label">قيمة التصرفات العقارية <small>5% من قيمة العقار</small></td><td class="value"><div class="num" id="out-tasarrufat">—</div><div class="words" id="out-tasarrufat-w"></div></td></tr>
+              <tr class="r-row"><td class="label">قيمة التصرفات العقارية (إن وجدت) <small>5% من قيمة العقار</small></td><td class="value"><div class="num" id="out-tasarrufat">—</div><div class="words" id="out-tasarrufat-w"></div></td></tr>
               <tr class="r-row"><td class="label">رسوم السجل العيني</td><td class="value"><div class="num" id="out-y">—</div><div class="words" id="out-y-w"></div></td></tr>
               <tr class="r-row"><td class="label">أتعاب عامة</td><td class="value"><div class="num" id="out-z">—</div><div class="words" id="out-z-w"></div></td></tr>
               <tr class="r-row total-row"><td class="label">الإجمالي الكلي</td><td class="value"><div class="num" id="out-total">—</div><div class="words" id="out-total-w"></div></td></tr>
@@ -358,7 +360,7 @@
         <tbody>
           <tr><td class="p-label">قيمة العقار</td><td class="p-value"><div class="p-num" id="p-out-x">—</div><div class="p-words" id="p-out-x-w"></div></td></tr>
           <tr><td class="p-label">قيمة السعي <small>2.5% من قيمة العقار</small></td><td class="p-value"><div class="p-num" id="p-out-seai">—</div><div class="p-words" id="p-out-seai-w"></div></td></tr>
-          <tr><td class="p-label">قيمة التصرفات العقارية <small>5% من قيمة العقار</small></td><td class="p-value"><div class="p-num" id="p-out-tasarrufat">—</div><div class="p-words" id="p-out-tasarrufat-w"></div></td></tr>
+          <tr><td class="p-label">قيمة التصرفات العقارية (إن وجدت) <small>5% من قيمة العقار</small></td><td class="p-value"><div class="p-num" id="p-out-tasarrufat">—</div><div class="p-words" id="p-out-tasarrufat-w"></div></td></tr>
           <tr><td class="p-label">رسوم السجل العيني</td><td class="p-value"><div class="p-num" id="p-out-y">—</div><div class="p-words" id="p-out-y-w"></div></td></tr>
           <tr><td class="p-label">أتعاب عامة</td><td class="p-value"><div class="p-num" id="p-out-z">—</div><div class="p-words" id="p-out-z-w"></div></td></tr>
           <tr class="p-total"><td class="p-label">الإجمالي الكلي</td><td class="p-value"><div class="p-num" id="p-out-total">—</div><div class="p-words" id="p-out-total-w"></div></td></tr>
