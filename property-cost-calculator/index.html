@@ -242,37 +242,50 @@
        across Chrome, Edge, and Firefox. */
     #print-page img.print-footer{ position:absolute; top:244.4mm; left:0; width:210mm; display:block; }
 
+    /* The block below sits between the header image (ends ~35mm) and the
+       footer image (starts 244.4mm), i.e. it has ~207mm to work with.
+       Every value here (paddings, font sizes, margins) was recalculated
+       so the title + subtitle + 6 rows always fit inside that budget with
+       margin to spare, even when a label wraps to two lines — this is
+       what was getting sliced off by the footer before. table-layout:fixed
+       plus explicit column widths also keep the two columns visually
+       balanced instead of resizing with content length. */
     #print-table-area{
       position:absolute;
-      top:37mm; left:0; width:210mm;
+      top:35mm; left:0; width:210mm; height:205mm;
       padding:0 20mm;
+      box-sizing:border-box;
+      display:flex; flex-direction:column; justify-content:center;
     }
     #print-table-area .p-title{
-      text-align:center; font-size:21pt; font-weight:900; color:var(--ink);
-      margin:0 0 3mm; font-family:inherit; line-height:1.2;
+      text-align:center; font-size:19pt; font-weight:900; color:var(--ink);
+      margin:0 0 2mm; font-family:inherit; line-height:1.2;
     }
     #print-table-area .p-sub{
-      text-align:center; font-size:11pt; font-weight:700; color:var(--ink-2); margin:0 0 6mm;
+      text-align:center; font-size:10pt; font-weight:700; color:var(--ink-2); margin:0 0 5mm;
       font-family:inherit; line-height:1.2;
     }
-    table.p-table{ width:100%; border-collapse:collapse; font-family:inherit; }
+    table.p-table{ width:100%; border-collapse:collapse; font-family:inherit; table-layout:fixed; }
+    table.p-table col.p-col-label{ width:58%; }
+    table.p-table col.p-col-value{ width:42%; }
     table.p-table td{
-      padding:7.5mm 5mm; font-size:16pt; font-weight:800; border-bottom:0.5pt solid var(--line);
-      color:var(--ink); vertical-align:middle; font-family:inherit; line-height:1.2;
+      padding:4.5mm 5mm; font-size:14pt; font-weight:800; border-bottom:0.5pt solid var(--line);
+      color:var(--ink); vertical-align:middle; font-family:inherit; line-height:1.25;
+      word-wrap:break-word; overflow-wrap:break-word;
     }
-    table.p-table td.p-label{ font-weight:800; color:var(--ink); }
-    table.p-table td.p-label small{ display:block; font-size:10pt; font-weight:700; color:var(--gold-1); margin-top:1.5mm; line-height:1.2; }
+    table.p-table td.p-label{ font-weight:800; color:var(--ink); text-align:right; }
+    table.p-table td.p-label small{ display:block; font-size:9pt; font-weight:700; color:var(--gold-1); margin-top:1mm; line-height:1.2; }
     table.p-table td.p-value{ text-align:left; font-weight:900; font-variant-numeric:tabular-nums; }
-    table.p-table td.p-value .p-num{ white-space:nowrap; font-size:20pt; font-weight:900; color:#000; line-height:1.2; }
+    table.p-table td.p-value .p-num{ white-space:nowrap; font-size:17pt; font-weight:900; color:#000; line-height:1.2; }
     table.p-table td.p-value .p-words{
-      text-align:left; white-space:normal; font-weight:700; font-size:10pt;
-      color:var(--gold-1); margin-top:1.5mm; line-height:1.3;
+      text-align:left; white-space:normal; font-weight:700; font-size:9pt;
+      color:var(--gold-1); margin-top:1mm; line-height:1.25;
     }
-    table.p-table tr.p-total td{ background:var(--paper-2); padding:10.5mm 5mm; }
-    table.p-table tr.p-total td.p-label{ font-size:18pt; font-weight:900; color:var(--ink); }
+    table.p-table tr.p-total td{ background:var(--paper-2); padding:6mm 5mm; }
+    table.p-table tr.p-total td.p-label{ font-size:15pt; font-weight:900; color:var(--ink); }
     table.p-table tr.p-total td.p-value{ color:#000; }
-    table.p-table tr.p-total td.p-value .p-num{ font-size:26pt; font-weight:900; color:#000; }
-    table.p-table tr.p-total td.p-value .p-words{ font-size:11pt; font-weight:800; }
+    table.p-table tr.p-total td.p-value .p-num{ font-size:21pt; font-weight:900; color:#000; }
+    table.p-table tr.p-total td.p-value .p-words{ font-size:10pt; font-weight:800; }
     table.p-table tr:last-child td{ border-bottom:none; }
   }
 </style>
@@ -375,6 +388,10 @@
       <div class="p-title">ملخص تكاليف الصفقة العقارية</div>
       <div class="p-sub" id="p-date"></div>
       <table class="p-table">
+        <colgroup>
+          <col class="p-col-label">
+          <col class="p-col-value">
+        </colgroup>
         <tbody>
           <tr><td class="p-label">قيمة العقار</td><td class="p-value"><div class="p-num" id="p-out-x">—</div><div class="p-words" id="p-out-x-w"></div></td></tr>
           <tr><td class="p-label">قيمة السعي <small>2.5% من قيمة العقار</small></td><td class="p-value"><div class="p-num" id="p-out-seai">—</div><div class="p-words" id="p-out-seai-w"></div></td></tr>
