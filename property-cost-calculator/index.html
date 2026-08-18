@@ -278,8 +278,9 @@
     table.p-table td.p-value{ text-align:left; font-weight:900; font-variant-numeric:tabular-nums; }
     table.p-table td.p-value .p-num{ white-space:nowrap; font-size:17pt; font-weight:900; color:#000; line-height:1.2; }
     table.p-table td.p-value .p-words{
-      text-align:left; white-space:normal; font-weight:700; font-size:9pt;
+      text-align:left; white-space:nowrap; font-weight:700; font-size:9pt;
       color:var(--gold-1); margin-top:1mm; line-height:1.25;
+      display:block; overflow:visible; transform-origin:left center;
     }
     table.p-table tr.p-total td{ background:var(--paper-2); padding:6mm 5mm; }
     table.p-table tr.p-total td.p-label{ font-size:15pt; font-weight:900; color:var(--ink); }
@@ -593,6 +594,25 @@ function calc(){
     $('html, body').animate({ scrollTop: $results.offset().top - 24 }, 500);
   }, 80);
 }
+
+function fitPrintWords(){
+  var els = document.querySelectorAll('#print-table-area .p-words');
+  els.forEach(function(el){
+    el.style.transform = 'none';
+    var container = el.closest('td.p-value');
+    if(!container) return;
+    var cs = getComputedStyle(container);
+    var containerWidth = container.clientWidth - (parseFloat(cs.paddingLeft) || 0) - (parseFloat(cs.paddingRight) || 0);
+    var textWidth = el.scrollWidth;
+    if(containerWidth > 0 && textWidth > containerWidth){
+      var scale = containerWidth / textWidth;
+      if(scale < 0.55){ scale = 0.55; }
+      el.style.transform = 'scale(' + scale.toFixed(3) + ')';
+    }
+  });
+}
+
+window.addEventListener('beforeprint', fitPrintWords);
 
 function printPdf(){
   var imgs = document.querySelectorAll('#print-page img');
