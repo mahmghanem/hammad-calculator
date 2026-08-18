@@ -269,7 +269,7 @@
     table.p-table col.p-col-label{ width:58%; }
     table.p-table col.p-col-value{ width:42%; }
     table.p-table td{
-      padding:4.5mm 5mm; font-size:14pt; font-weight:800; border-bottom:0.5pt solid var(--line);
+      padding:4.5mm 5mm; font-size:14pt; font-weight:800; border-bottom:none;
       color:var(--ink); vertical-align:middle; font-family:inherit; line-height:1.25;
       word-wrap:break-word; overflow-wrap:break-word;
     }
@@ -277,17 +277,30 @@
     table.p-table td.p-label small{ display:block; font-size:9pt; font-weight:700; color:var(--gold-1); margin-top:1mm; line-height:1.2; }
     table.p-table td.p-value{ text-align:left; font-weight:900; font-variant-numeric:tabular-nums; }
     table.p-table td.p-value .p-num{ white-space:nowrap; font-size:17pt; font-weight:900; color:#000; line-height:1.2; }
-    table.p-table td.p-value .p-words{
-      text-align:left; white-space:nowrap; font-weight:700; font-size:9pt;
-      color:var(--gold-1); margin-top:1mm; line-height:1.25;
-      display:block; overflow:visible; transform-origin:left center;
+
+    /* The spelled-out amount ("فقط ... لا غير") now lives in its own full-width
+       row spanning both columns instead of being squeezed into the 42%-wide
+       value column. This gives it the entire row's width to work with (left
+       aligned, under the number) so it has room to breathe; the JS below only
+       needs to nudge the font-size down a touch for the rare very-long case,
+       instead of the old transform:scale() hack which visually shrank the
+       text but never reclaimed layout space — that's what was slicing it off
+       under the footer/next block before. */
+    table.p-table tr.p-words-row td{
+      padding:0 5mm 3.5mm; border-bottom:0.5pt solid var(--line);
+      text-align:left; vertical-align:top;
     }
-    table.p-table tr.p-total td{ background:var(--paper-2); padding:6mm 5mm; }
+    table.p-table tr.p-words-row .p-words{
+      text-align:left; white-space:nowrap; font-weight:700; font-size:9pt;
+      color:var(--gold-1); line-height:1.3; display:block; width:100%;
+    }
+    table.p-table tr.p-total td{ background:var(--paper-2); padding:6mm 5mm 2mm; }
     table.p-table tr.p-total td.p-label{ font-size:15pt; font-weight:900; color:var(--ink); }
     table.p-table tr.p-total td.p-value{ color:#000; }
     table.p-table tr.p-total td.p-value .p-num{ font-size:21pt; font-weight:900; color:#000; }
-    table.p-table tr.p-total td.p-value .p-words{ font-size:10pt; font-weight:800; }
-    table.p-table tr:last-child td{ border-bottom:none; }
+    table.p-table tr.p-total-words td{ background:var(--paper-2); padding:0 5mm 5mm; }
+    table.p-table tr.p-total-words .p-words{ font-size:10pt; font-weight:800; }
+    table.p-table tr.p-words-row:last-child td{ border-bottom:none; }
   }
 </style>
 </head>
@@ -394,12 +407,23 @@
           <col class="p-col-value">
         </colgroup>
         <tbody>
-          <tr><td class="p-label">قيمة العقار</td><td class="p-value"><div class="p-num" id="p-out-x">—</div><div class="p-words" id="p-out-x-w"></div></td></tr>
-          <tr><td class="p-label">قيمة السعي <small>2.5% من قيمة العقار</small></td><td class="p-value"><div class="p-num" id="p-out-seai">—</div><div class="p-words" id="p-out-seai-w"></div></td></tr>
-          <tr><td class="p-label">قيمة التصرفات العقارية (إن وجدت) <small>5% من قيمة العقار</small></td><td class="p-value"><div class="p-num" id="p-out-tasarrufat">—</div><div class="p-words" id="p-out-tasarrufat-w"></div></td></tr>
-          <tr><td class="p-label">رسوم السجل العيني</td><td class="p-value"><div class="p-num" id="p-out-y">—</div><div class="p-words" id="p-out-y-w"></div></td></tr>
-          <tr><td class="p-label">أتعاب عامة</td><td class="p-value"><div class="p-num" id="p-out-z">—</div><div class="p-words" id="p-out-z-w"></div></td></tr>
-          <tr class="p-total"><td class="p-label">الإجمالي الكلي</td><td class="p-value"><div class="p-num" id="p-out-total">—</div><div class="p-words" id="p-out-total-w"></div></td></tr>
+          <tr><td class="p-label">قيمة العقار</td><td class="p-value"><div class="p-num" id="p-out-x">—</div></td></tr>
+          <tr class="p-words-row"><td colspan="2"><div class="p-words" id="p-out-x-w"></div></td></tr>
+
+          <tr><td class="p-label">قيمة السعي <small>2.5% من قيمة العقار</small></td><td class="p-value"><div class="p-num" id="p-out-seai">—</div></td></tr>
+          <tr class="p-words-row"><td colspan="2"><div class="p-words" id="p-out-seai-w"></div></td></tr>
+
+          <tr><td class="p-label">قيمة التصرفات العقارية (إن وجدت) <small>5% من قيمة العقار</small></td><td class="p-value"><div class="p-num" id="p-out-tasarrufat">—</div></td></tr>
+          <tr class="p-words-row"><td colspan="2"><div class="p-words" id="p-out-tasarrufat-w"></div></td></tr>
+
+          <tr><td class="p-label">رسوم السجل العيني</td><td class="p-value"><div class="p-num" id="p-out-y">—</div></td></tr>
+          <tr class="p-words-row"><td colspan="2"><div class="p-words" id="p-out-y-w"></div></td></tr>
+
+          <tr><td class="p-label">أتعاب عامة</td><td class="p-value"><div class="p-num" id="p-out-z">—</div></td></tr>
+          <tr class="p-words-row"><td colspan="2"><div class="p-words" id="p-out-z-w"></div></td></tr>
+
+          <tr class="p-total"><td class="p-label">الإجمالي الكلي</td><td class="p-value"><div class="p-num" id="p-out-total">—</div></td></tr>
+          <tr class="p-words-row p-total-words"><td colspan="2"><div class="p-words" id="p-out-total-w"></div></td></tr>
         </tbody>
       </table>
     </div>
@@ -596,18 +620,30 @@ function calc(){
 }
 
 function fitPrintWords(){
+  // Each spelled-out amount now sits in its own full-width row (colspan
+  // across the whole table), so it already has the entire row to work with.
+  // We just nudge the font-size down a little if a particular amount is
+  // unusually long, and only as a last resort allow it to wrap onto a
+  // second line — it's never scaled or clipped, so nothing gets sliced off.
   var els = document.querySelectorAll('#print-table-area .p-words');
   els.forEach(function(el){
-    el.style.transform = 'none';
-    var container = el.closest('td.p-value');
+    el.style.fontSize = '';
+    el.style.whiteSpace = 'nowrap';
+    var container = el.parentElement;
     if(!container) return;
     var cs = getComputedStyle(container);
     var containerWidth = container.clientWidth - (parseFloat(cs.paddingLeft) || 0) - (parseFloat(cs.paddingRight) || 0);
-    var textWidth = el.scrollWidth;
-    if(containerWidth > 0 && textWidth > containerWidth){
-      var scale = containerWidth / textWidth;
-      if(scale < 0.55){ scale = 0.55; }
-      el.style.transform = 'scale(' + scale.toFixed(3) + ')';
+    if(containerWidth <= 0) return;
+
+    var baseSize = parseFloat(getComputedStyle(el).fontSize);
+    var minSize = baseSize * 0.75;
+    var size = baseSize;
+    while(el.scrollWidth > containerWidth && size > minSize){
+      size -= 0.5;
+      el.style.fontSize = size + 'px';
+    }
+    if(el.scrollWidth > containerWidth){
+      el.style.whiteSpace = 'normal';
     }
   });
 }
