@@ -334,7 +334,7 @@
       <div class="field reveal-item">
         <label for="x">قيمة العقار</label>
         <div class="input-row">
-          <input type="number" id="x" placeholder="0" inputmode="decimal" min="0" step="any">
+          <input type="text" id="x" placeholder="0" inputmode="decimal" autocomplete="off">
         </div>
         <div class="error-msg" id="err-x"><span class="dot">!</span> هذا الحقل مطلوب، يرجى إدخال القيمة</div>
       </div>
@@ -343,7 +343,7 @@
       <div class="field reveal-item">
         <label for="y">رسوم السجل العيني</label>
         <div class="input-row">
-          <input type="number" id="y" placeholder="0" inputmode="decimal" min="0" step="any">
+          <input type="text" id="y" placeholder="0" inputmode="decimal" autocomplete="off">
         </div>
         <div class="error-msg" id="err-y"><span class="dot">!</span> هذا الحقل مطلوب، يرجى إدخال القيمة</div>
       </div>
@@ -352,7 +352,7 @@
       <div class="field reveal-item">
         <label for="z">أتعاب عامة</label>
         <div class="input-row">
-          <input type="number" id="z" placeholder="0" inputmode="decimal" min="0" step="any">
+          <input type="text" id="z" placeholder="0" inputmode="decimal" autocomplete="off">
         </div>
         <div class="error-msg" id="err-z"><span class="dot">!</span> هذا الحقل مطلوب، يرجى إدخال القيمة</div>
       </div>
@@ -376,7 +376,7 @@
             <tbody>
               <tr class="r-row"><td class="label">قيمة العقار</td><td class="value"><div class="num" id="out-x">—</div><div class="words" id="out-x-w"></div></td></tr>
               <tr class="r-row"><td class="label">قيمة السعي <small>2.5% من قيمة العقار</small></td><td class="value"><div class="num" id="out-seai">—</div><div class="words" id="out-seai-w"></div></td></tr>
-              <tr class="r-row"><td class="label">قيمة التصرفات العقارية (إن وجدت) <small>5% من قيمة العقار</small></td><td class="value"><div class="num" id="out-tasarrufat">—</div><div class="words" id="out-tasarrufat-w"></div></td></tr>
+              <tr class="r-row"><td class="label">ضريبة التصرفات العقارية (إن وجدت) <small>5% من قيمة العقار</small></td><td class="value"><div class="num" id="out-tasarrufat">—</div><div class="words" id="out-tasarrufat-w"></div></td></tr>
               <tr class="r-row"><td class="label">رسوم السجل العيني</td><td class="value"><div class="num" id="out-y">—</div><div class="words" id="out-y-w"></div></td></tr>
               <tr class="r-row"><td class="label">أتعاب عامة</td><td class="value"><div class="num" id="out-z">—</div><div class="words" id="out-z-w"></div></td></tr>
               <tr class="r-row total-row"><td class="label">الإجمالي الكلي</td><td class="value"><div class="num" id="out-total">—</div><div class="words" id="out-total-w"></div></td></tr>
@@ -413,7 +413,7 @@
           <tr><td class="p-label">قيمة السعي <small>2.5% من قيمة العقار</small></td><td class="p-value"><div class="p-num" id="p-out-seai">—</div></td></tr>
           <tr class="p-words-row"><td colspan="2"><div class="p-words" id="p-out-seai-w"></div></td></tr>
 
-          <tr><td class="p-label">قيمة التصرفات العقارية (إن وجدت) <small>5% من قيمة العقار</small></td><td class="p-value"><div class="p-num" id="p-out-tasarrufat">—</div></td></tr>
+          <tr><td class="p-label">ضريبة التصرفات العقارية (إن وجدت) <small>5% من قيمة العقار</small></td><td class="p-value"><div class="p-num" id="p-out-tasarrufat">—</div></td></tr>
           <tr class="p-words-row"><td colspan="2"><div class="p-words" id="p-out-tasarrufat-w"></div></td></tr>
 
           <tr><td class="p-label">رسوم السجل العيني</td><td class="p-value"><div class="p-num" id="p-out-y">—</div></td></tr>
@@ -517,8 +517,27 @@ function revealFields(){
 }
 
 /* ---------------- Validation ---------------- */
+/* ---------------- Thousands-separated inputs ---------------- */
+function rawNumber(id){
+  var raw = String($('#'+id).val() || '').replace(/,/g, '').trim();
+  return raw;
+}
+function formatInputValue(el){
+  var raw = String(el.value).replace(/[^\d.]/g, '');
+  var firstDot = raw.indexOf('.');
+  if(firstDot !== -1){
+    raw = raw.slice(0, firstDot + 1) + raw.slice(firstDot + 1).replace(/\./g, '');
+  }
+  var parts = raw.split('.');
+  var intPart = parts[0].replace(/^0+(?=\d)/, '').slice(0, 15);
+  var withCommas = intPart ? Number(intPart).toLocaleString('en-US') : (parts.length > 1 ? '0' : '');
+  var decPart = parts.length > 1 ? '.' + parts[1].slice(0, 2) : '';
+  el.value = withCommas + decPart;
+}
+$('#x, #y, #z').on('input', function(){ formatInputValue(this); });
+
 function fieldIsValid(id){
-  var val = $.trim($('#'+id).val());
+  var val = rawNumber(id);
   return val !== '' && !isNaN(val) && Number(val) >= 0;
 }
 
@@ -565,9 +584,9 @@ function validateAndCalc(){
 
 /* ---------------- Calculation ---------------- */
 function calc(){
-  var x = parseFloat($('#x').val()) || 0;
-  var y = parseFloat($('#y').val()) || 0;
-  var z = parseFloat($('#z').val()) || 0;
+  var x = parseFloat(rawNumber('x')) || 0;
+  var y = parseFloat(rawNumber('y')) || 0;
+  var z = parseFloat(rawNumber('z')) || 0;
 
   var seai = x * 0.025;
   var tasarrufat = x * 0.05;
